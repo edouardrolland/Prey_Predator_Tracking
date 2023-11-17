@@ -45,9 +45,10 @@ class BoidsNode(Node):
         self.boids_timer = self.create_timer(self.timer_period, self.boids_callback)
 
 
-    def position_callback(self, msg: VehicleLocalPosition):
+    def position_callback(self, msg: VehicleLocalPosition): 
         self.x_robot = msg.x*3 + 500
         self.y_robot = msg.y*3 + 500
+        print('some test for github')
 
     def simulation_callback(self):
         self.simulation.update_animation(self.x_robot, self.y_robot)
