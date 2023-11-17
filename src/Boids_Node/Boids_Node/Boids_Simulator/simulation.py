@@ -119,4 +119,3 @@ class Simulation():
 
         pygame_widgets.update(events)
         pygame.display.update()
-        #self.clock.tick(time)
