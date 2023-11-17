@@ -11,10 +11,9 @@ from rclpy.qos import (
     QoSDurabilityPolicy,
 )
 
-
 from px4_msgs.msg import VehicleLocalPosition
 from .Boids_Simulator.simulation import Simulation
-
+from boid_msg.msg import BoidStatus
 
 class BoidsNode(Node):
 
@@ -41,17 +40,22 @@ class BoidsNode(Node):
         """ Various Callbacks """
         self.position_sub = self.create_subscription(VehicleLocalPosition, '/fmu/out/vehicle_local_position', self.position_callback, qos_profile)
         self.simulation_callback = self.create_timer(self.timer_period, self.simulation_callback)
+    
+        self.boids_pub = self.create_publisher(BoidStatus, '/boids/positions', qos_profile)
+        self.boids_timer = self.create_timer(self.timer_period, self.boids_callback)
+
 
     def position_callback(self, msg: VehicleLocalPosition):
-        #self.get_logger().info('I heard: "%s"' % msg)
         self.x_robot = msg.x*3 + 500
         self.y_robot = msg.y*3 + 500
-        print(msg.x, msg.y)
 
     def simulation_callback(self):
         self.simulation.update_animation(self.x_robot, self.y_robot)
 
-        
+    def boids_callback(self):        
+        msg = BoidStatus()
+        msg.boidpositions = self.simulation.data_formatting()
+        self.boids_pub.publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)

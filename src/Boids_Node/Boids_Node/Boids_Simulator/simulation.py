@@ -7,6 +7,7 @@ from .boids import Boid
 from scipy.spatial import KDTree
 from .predator import Predator
 from px4_msgs.msg import VehicleLocalPosition
+from geometry_msgs.msg import Vector3
 
 time = 50
 
@@ -53,15 +54,16 @@ class Simulation():
 
     def display_drone(self, x, y):
         pygame.draw.circle(self.screen, 'orange', (x,y), 5)
+    
+    def data_formatting(self):
+        scale = 1/3
+        return [Vector3(x = boid.x * scale, y = boid.y * scale, z = boid.stress) for boid in self.boids]
 
     def update_animation(self, x_drone, y_drone):
 
         events = pygame.event.get()
-
         self.screen.fill((255, 255, 255))
-        #pygame.draw.rect(self.screen, 'black', (self.margin, self.margin, self.window[0] - 2*self.margin, self.window[1] - 2*self.margin))
-        #pygame.draw.rect(self.screen, 'white', (self.margin + 2, self.margin + 2, self.window[0] - 2*self.margin - 4, self.window[1] - 2*self.margin - 4))
-        
+
         text = self.font.render("Separation", True, (0, 0, 0))
         self.screen.blit(text, (5, 10-2))
         separation_factor = self.separation_slider.getValue()

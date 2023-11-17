@@ -1,7 +1,6 @@
 from setuptools import find_packages, setup
 
 package_name = 'Boids_Node'
-submodules = ['Boids_Simulator']
 
 setup(
     name=package_name,
